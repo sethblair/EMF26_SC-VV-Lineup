@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMF26 // EXTRA EVENTS LINEUP</title>
+  <style>
+    :root {
+      --bg-base: #0c0d10;
+      --bg-surface: #14161d;
+      --bg-card: #1c1f2b;
+      --border-color: #2a2e3f;
+      --text-main: #e2e8f0;
+      --text-muted: #8a94a6;
+      --accent-cyan: #00f0ff;
+      --accent-magenta: #ff0055;
+      --accent-amber: #ffb703;
+      --hover-row: rgba(0, 240, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header Styling */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 12px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background-color: rgba(0, 240, 255, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      padding: 5px 12px;
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+    }
+
+    /* Search & Controls */
+    .controls {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .brand {
+        justify-content: center;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+        margin-top: 4px;
+      }
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.1rem;
+      }
+    }
+
+    input, select {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+    }
+
+    /* Main Deck / Table Styling */
+    .table-deck {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background-color: var(--bg-card);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      padding: 14px 16px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th:hover {
+      color: var(--accent-cyan);
+    }
+
+    th .sort-icon {
+      margin-left: 4px;
+      opacity: 0.5;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: var(--hover-row);
+    }
+
+    /* Day Text & Badge Color Coding */
+    .day-thursday { color: #ffb703; font-weight: 700; }
+    .day-friday { color: #ff0055; font-weight: 700; }
+    .day-saturday { color: #00f0ff; font-weight: 700; }
+    .day-sunday { color: #00ff88; font-weight: 700; }
+    .day-tbd { color: #b5179e; font-weight: 700; }
+
+    .badge-day {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid currentColor;
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Category Background Color Coding */
+    .badge-category {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+
+    .cat-music {
+      background-color: rgba(255, 0, 85, 0.15);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      color: #ff6699;
+    }
+
+    .cat-activity {
+      background-color: rgba(0, 240, 255, 0.15);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: #80f7ff;
+    }
+
+    .cat-workshop {
+      background-color: rgba(255, 183, 3, 0.15);
+      border: 1px solid rgba(255, 183, 3, 0.4);
+      color: #ffd056;
+    }
+
+    .artist-name {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .time-slot {
+      font-family: monospace;
+      color: var(--accent-cyan);
+    }
+
+    /* Footer Stats */
+    .table-footer {
+      padding: 12px 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Mobile Responsive Card Styling */
+    @media (max-width: 768px) {
+      .table-deck {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
+      #scheduleTable, 
+      #scheduleTable thead, 
+      #scheduleTable tbody, 
+      #scheduleTable tr, 
+      #scheduleTable td {
+        display: block;
+        width: 100%;
+      }
+
+      #scheduleTable thead {
+        display: none;
+      }
+
+      #scheduleTable tr {
+        background-color: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 12px;
+        padding: 14px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #scheduleTable td {
+        padding: 0;
+        border: none;
+        white-space: normal;
+      }
+
+      /* Top Header Bar: Flexbox layout guarantees full span */
+      td.card-top {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+
+      .card-top-left {
+        flex: 1;
+        text-align: left;
+      }
+
+      .card-time-center {
+        flex: 1;
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent-cyan);
+        text-align: center;
+      }
+
+      .card-top-right {
+        flex: 1;
+        text-align: right;
+      }
+
+      /* Card Center: Camp Name Dimmed & Slightly Increased Size, Event/Artist Larger White Text */
+      .card-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 4px;
+        margin: 4px 0;
+      }
+
+      .card-host {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .card-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #fff;
+      }
+
+      /* Card Bottom (Details / Notes) */
+      .card-details {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 8px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <h1>EMF26 // EXTRA EVENTS LINEUP</h1>
+      </div>
+      <div class="header-actions">
+        <div class="status-badge" id="rowCount">0 Quests Await</div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search Artist, Event, Stage, or Details...">
+      
+      <select id="filterDay">
+        <option value="">All Days</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+        <option value="TBD / Multiple">TBD / Multiple</option>
+      </select>
+
+      <select id="filterCategory">
+        <option value="">All Categories</option>
+        <option value="Music / DJ Set">Music / DJ Set</option>
+        <option value="Activity / Interactive">Activity / Interactive</option>
+        <option value="Workshop / Fitness">Workshop / Fitness</option>
+      </select>
+
+      <select id="filterHost">
+        <option value="">All Stages / Hosts</option>
+      </select>
+    </div>
+
+    <div class="table-deck">
+      <table id="scheduleTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">Day <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(1)">Start Time <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(2)">Host / Stage <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(3)">Event / Activity <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(4)">Artist / DJ <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(5)">Category <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable(6)">Details / Notes <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows dynamically inserted here -->
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span id="showingCount">Showing 0 of 0 entries</span>
+        <span>Rekordbox Engine v1.1</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const festivalData = [
+      {"day":"Thursday","time":"12:00 AM","event":"All Night Silent Disco","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Early Arrival"},
+      {"day":"Thursday","time":"12:30 AM","event":"Beishaus Thursday Night","host":"Beishaus","artist":"CMPLXTY","category":"Music / DJ Set","details":"Erev"},
+      {"day":"Thursday","time":"1:00 AM","event":"Biologix Set","host":"420 Rave Vibe Village","artist":"Biologix","category":"Music / DJ Set","details":"Silent Disco / 420 Rave"},
+      {"day":"Thursday","time":"1:30 AM","event":"Beishaus Thursday Night","host":"Beishaus","artist":"Chubby","category":"Music / DJ Set","details":"Erev"},
+      {"day":"Thursday","time":"2:00 AM","event":"Bread Party - BYOB","host":"420 R.AVE Vibe Village","artist":"—","category":"Activity / Interactive","details":"BYOB"},
+      {"day":"Thursday","time":"2:30 AM","event":"Beishaus Thursday Night","host":"Beishaus","artist":"Vibinology","category":"Music / DJ Set","details":"Erev"},
+      {"day":"Thursday","time":"3:30 AM","event":"Beishaus Thursday Night","host":"Beishaus","artist":"MAXX_","category":"Music / DJ Set","details":"Erev"},
+      {"day":"Thursday","time":"5:00 AM","event":"Beishaus Thursday Night","host":"Beishaus","artist":"OZBA","category":"Music / DJ Set","details":"Erev"},
+      {"day":"Thursday","time":"All Day","event":"Elements Taskmaster","host":"The Wonkologists Vibe Village","artist":"—","category":"Activity / Interactive","details":"Take a task, complete task, win merch & ducks"},
+      {"day":"Thursday","time":"All Day","event":"Take One Leave One Table","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"PLUR treasure trade"},
+      {"day":"Thursday","time":"All Day","event":"Blow a Bubble Buddy","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Hang out & blow bubbles"},
+      {"day":"Thursday","time":"All Day","event":"Reusable Water Balloons","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Eco-friendly water games"},
+      {"day":"Thursday","time":"All Day","event":"Coloring & Chill","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Crayons provided"},
+      {"day":"Thursday","time":"All Day","event":"Refresh Station","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Sanitizer, sunnies, wipes, sunscreen"},
+      {"day":"Thursday","time":"All Day","event":"Clothing Exchange","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Gently used clean rave gear exchange"},
+      {"day":"Thursday","time":"All Day","event":"Take One - Leave One Basket","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Ongoing non-scheduled activity"},
+      {"day":"Thursday","time":"All Day","event":"Cuddle Puddle","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Ongoing non-scheduled activity"},
+      {"day":"Thursday","time":"All Day","event":"Kandi Making","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Ongoing non-scheduled activity"},
+      {"day":"Friday","time":"10:30 AM","event":"Guided Morning Yoga Flow","host":"Elementals","artist":"—","category":"Workshop / Fitness","details":"Morning yoga session"},
+      {"day":"Friday","time":"11:00 AM","event":"Guided Yoga","host":"420 R.AVE Vibe Village","artist":"—","category":"Workshop / Fitness","details":"Morning movement"},
+      {"day":"Friday","time":"11:00 AM","event":"Movement: Soul Flow Vinyasa","host":"420 R.AVE","artist":"Jordie_Rock","category":"Workshop / Fitness","details":"Yoga session"},
+      {"day":"Friday","time":"11:30 AM","event":"Sound Bath Meditation","host":"Elementals","artist":"—","category":"Workshop / Fitness","details":"Meditation"},
+      {"day":"Friday","time":"12:00 PM","event":"Walk the Plank","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Elemental activities"},
+      {"day":"Friday","time":"12:00 PM","event":"Musical Chairs (BYOC)","host":"The Last Jawn Benders","artist":"—","category":"Activity / Interactive","details":"Bring Your Own Chair"},
+      {"day":"Friday","time":"12:00 PM","event":"Daytime Sets","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Runs 12 PM - 5 PM"},
+      {"day":"Friday","time":"12:30 PM","event":"Dubstep Karaoke","host":"Elementals","artist":"—","category":"Activity / Interactive","details":"Continuous through Sunset"},
+      {"day":"Friday","time":"12:30 PM","event":"Parm on the Farm","host":"Strictly Grooves Only / Oft Away","artist":"ZiSKi","category":"Music / DJ Set","details":"2nd Annual Free Chicken Parm Rave"},
+      {"day":"Friday","time":"1:00 PM","event":"Potluck","host":"Groove Garden","artist":"—","category":"Activity / Interactive","details":"Bring a drink, dish, or dessert"},
+      {"day":"Friday","time":"1:00 PM","event":"Beer Pong Tournament","host":"420 R.AVE Vibe Village","artist":"—","category":"Activity / Interactive","details":"Tournament style"},
+      {"day":"Friday","time":"1:00 PM","event":"Yoga / Stretching","host":"Camp Alchemy","artist":"Becca","category":"Workshop / Fitness","details":"Morning stretch"},
+      {"day":"Friday","time":"1:30 PM","event":"Seelie DJ Set","host":"Camp Alchemy","artist":"Seelie","category":"Music / DJ Set","details":"Wonky bass"},
+      {"day":"Friday","time":"2:00 PM","event":"SamK DJ Set","host":"Camp Alchemy","artist":"SamK","category":"Music / DJ Set","details":"Hard techno"},
+      {"day":"Friday","time":"3:00 PM","event":"American Sign Language for Beginners","host":"The Last Jawn Benders","artist":"—","category":"Workshop / Fitness","details":"ASL Intro Workshop"},
+      {"day":"Friday","time":"4:00 PM","event":"Shanty Time","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Sea shanty singalong"},
+      {"day":"Friday","time":"5:00 PM","event":"Mannequin Challenge","host":"Camp Smokealottapottamus / Board of Directors","artist":"—","category":"Activity / Interactive","details":"Group challenge video"},
+      {"day":"Friday","time":"8:00 PM","event":"Fik's Elemental Costume Contest","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Costume competition"},
+      {"day":"Friday","time":"2:00 AM","event":"Electric Slumber Party / Kaleidokrew Takeover","host":"420 R.AVE & Kaleido Krew","artist":"Various B2B DJs","category":"Music / DJ Set","details":"Dress in onesies/pajamas, includes Silent Disco"},
+      {"day":"Friday","time":"2:30 AM","event":"Beishaus Friday Night","host":"Beishaus","artist":"9B49","category":"Music / DJ Set","details":"Re'eh"},
+      {"day":"Friday","time":"4:00 AM","event":"Beishaus Friday Night","host":"Beishaus","artist":"RIDDIM.NYC","category":"Music / DJ Set","details":"Re'eh"},
+      {"day":"Friday","time":"4:00 AM","event":"Silent Disco","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Early morning set"},
+      {"day":"Friday","time":"5:00 AM","event":"Beishaus Friday Night","host":"Beishaus","artist":"VERAV","category":"Music / DJ Set","details":"Re'eh"},
+      {"day":"Friday","time":"All Day","event":"Elements Taskmaster","host":"The Wonkologists Vibe Village","artist":"—","category":"Activity / Interactive","details":"Interactive tasks & prizes"},
+      {"day":"Friday","time":"All Day","event":"Swamp Activities","host":"Camp Smokealottapottamus","artist":"—","category":"Activity / Interactive","details":"Bubbles, Take-One Leave-One, Selfie Station, Bingo"},
+      {"day":"Friday","time":"All Day","event":"Elementals Ongoing","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Trade table, bubbles, water balloons, coloring, gear exchange"},
+      {"day":"Friday","time":"All Day","event":"Camp Alchemy Ongoing","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Cuddle puddle, kandi making, take-one leave-one"},
+      {"day":"Saturday","time":"10:30 AM","event":"Guided Morning Yoga Flow","host":"Elementals","artist":"—","category":"Workshop / Fitness","details":"Morning yoga"},
+      {"day":"Saturday","time":"11:00 AM","event":"Guided Yoga","host":"420 R.AVE Vibe Village","artist":"—","category":"Workshop / Fitness","details":"Morning yoga"},
+      {"day":"Saturday","time":"11:00 AM","event":"Movement: Hatha Yoga","host":"420 R.AVE","artist":"Senseirayray","category":"Workshop / Fitness","details":"Hatha yoga session"},
+      {"day":"Saturday","time":"11:30 AM","event":"Jellyfishing 101","host":"Elementals","artist":"—","category":"Workshop / Fitness","details":"Make kandi jellyfish (supplies provided)"},
+      {"day":"Saturday","time":"12:00 PM","event":"Sound Bath","host":"The Last Jawn Benders","artist":"—","category":"Workshop / Fitness","details":"Sound relaxation"},
+      {"day":"Saturday","time":"12:00 PM","event":"Pirate Yoga","host":"Sidequest","artist":"—","category":"Workshop / Fitness","details":"Themed yoga session"},
+      {"day":"Saturday","time":"12:00 PM","event":"Disco Pancakes","host":"Camp Alchemy","artist":"Ryan","category":"Activity / Interactive","details":"Free breakfast + DJ set"},
+      {"day":"Saturday","time":"12:00 PM","event":"Daytime Sets","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Runs 12 PM - 5 PM"},
+      {"day":"Saturday","time":"1:00 PM","event":"Flow Meetup & BBQ","host":"420 R.AVE Vibe Village","artist":"—","category":"Activity / Interactive","details":"Flow arts & food"},
+      {"day":"Saturday","time":"1:00 PM","event":"Painting and Mixed Media Crafts","host":"Camp Alchemy","artist":"Juliet and Olivia","category":"Workshop / Fitness","details":"Craft workshop"},
+      {"day":"Saturday","time":"2:00 PM","event":"Dubstep Karaoke","host":"The Last Jawn Benders","artist":"—","category":"Activity / Interactive","details":"Karaoke session"},
+      {"day":"Saturday","time":"2:30 PM","event":"Rock the Runway Fashion Show","host":"K-Hole Kauldron Vibe Village","artist":"—","category":"Activity / Interactive","details":"Red carpet walk, free photos posted to Instagram"},
+      {"day":"Saturday","time":"2:30 PM","event":"Get Ready at the Cottage","host":"Groove Garden","artist":"Dingle Dorf","category":"Music / DJ Set","details":"Glam station with glitter & temp tattoos"},
+      {"day":"Saturday","time":"3:15 PM","event":"Get Ready at the Cottage","host":"Groove Garden","artist":"Faarz","category":"Music / DJ Set","details":"Live music set"},
+      {"day":"Saturday","time":"4:00 PM","event":"Battle Royale","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Games/Competition"},
+      {"day":"Saturday","time":"8:00 PM","event":"Shanty Time","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Sea shanty singalong"},
+      {"day":"Saturday","time":"2:00 AM","event":"Riddim Riot","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Night time set"},
+      {"day":"Saturday","time":"2:00 AM","event":"Beishaus Saturday Night","host":"Beishaus","artist":"Jonas Loeb","category":"Music / DJ Set","details":"Motzei"},
+      {"day":"Saturday","time":"3:30 AM","event":"Beishaus Saturday Night","host":"Beishaus","artist":"Zejibo","category":"Music / DJ Set","details":"Motzei"},
+      {"day":"Saturday","time":"4:00 AM","event":"Silent Disco","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Late night silent disco"},
+      {"day":"Saturday","time":"5:00 AM","event":"Beishaus Saturday Night","host":"Beishaus","artist":"Diceman","category":"Music / DJ Set","details":"Motzei"},
+      {"day":"Saturday","time":"All Day","event":"Astronomy in the Community","host":"Astronomy in the Community","artist":"—","category":"Activity / Interactive","details":"Daytime solar viewing & nighttime star parties"},
+      {"day":"Saturday","time":"All Day","event":"Elements Taskmaster","host":"The Wonkologists Vibe Village","artist":"—","category":"Activity / Interactive","details":"Interactive tasks & prizes"},
+      {"day":"Saturday","time":"All Day","event":"Elementals Ongoing","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Trade table, bubbles, water balloons, coloring, gear exchange"},
+      {"day":"Saturday","time":"All Day","event":"Camp Alchemy Ongoing","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Cuddle puddle, kandi making, take-one leave-one"},
+      {"day":"Sunday","time":"12:00 PM","event":"Human Car Wash","host":"Earth Vibe Village / The Panda Whores","artist":"—","category":"Activity / Interactive","details":"Wear swimsuit, bring water/bubble guns. Look for Panda Pirate flag"},
+      {"day":"Sunday","time":"12:00 PM","event":"Lorax Juggling Buffoons","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Performance / Activity"},
+      {"day":"Sunday","time":"12:00 PM","event":"Daytime Sets","host":"420 R.AVE Vibe Village","artist":"—","category":"Music / DJ Set","details":"Runs 12 PM - 5 PM"},
+      {"day":"Sunday","time":"12:30 PM","event":"Guided Morning Yoga Flow","host":"Elementals","artist":"—","category":"Workshop / Fitness","details":"Morning yoga"},
+      {"day":"Sunday","time":"1:00 PM","event":"Clear the Decks","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Interactive game"},
+      {"day":"Sunday","time":"1:00 PM","event":"Shuffling Class","host":"Camp Alchemy","artist":"Frances","category":"Workshop / Fitness","details":"Dance lesson"},
+      {"day":"Sunday","time":"1:00 PM","event":"Open Deck","host":"Groove Garden","artist":"Various","category":"Music / DJ Set","details":"Afternoon open deck (Sign up via Discord)"},
+      {"day":"Sunday","time":"4:00 PM","event":"Clown Bath","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Interactive event"},
+      {"day":"Sunday","time":"8:00 PM","event":"Award Ceremony","host":"Sidequest","artist":"—","category":"Activity / Interactive","details":"Camp awards"},
+      {"day":"Sunday","time":"2:00 AM","event":"Movie Night: Night at the Museum","host":"Groove Garden","artist":"—","category":"Activity / Interactive","details":"Screening (~2 AM)"},
+      {"day":"Sunday","time":"2:00 AM","event":"Movie Night: The Prophet","host":"420 R.AVE Vibe Village","artist":"—","category":"Activity / Interactive","details":"Late night movie"},
+      {"day":"Sunday","time":"2:30 AM","event":"Beishaus Sunday Night","host":"Beishaus","artist":"Avii","category":"Music / DJ Set","details":"Tov"},
+      {"day":"Sunday","time":"3:30 AM","event":"Beishaus Sunday Night","host":"Beishaus","artist":"Funky Fark","category":"Music / DJ Set","details":"Tov"},
+      {"day":"Sunday","time":"4:00 AM","event":"Movie Night: My Neighbor Totoro","host":"420 R.AVE Vibe Village","artist":"—","category":"Activity / Interactive","details":"Late night movie"},
+      {"day":"Sunday","time":"5:00 AM","event":"Beishaus Sunday Night","host":"Beishaus","artist":"Nissin","category":"Music / DJ Set","details":"Tov"},
+      {"day":"Sunday","time":"All Day","event":"Astronomy in the Community","host":"Astronomy in the Community","artist":"—","category":"Activity / Interactive","details":"Daytime solar viewing & nighttime star parties"},
+      {"day":"Sunday","time":"All Day","event":"Elements Taskmaster","host":"The Wonkologists Vibe Village","artist":"—","category":"Activity / Interactive","details":"Interactive tasks & prizes"},
+      {"day":"Sunday","time":"All Day","event":"Elementals Ongoing","host":"Elementals Vibe Village","artist":"—","category":"Activity / Interactive","details":"Trade table, bubbles, water balloons, coloring, gear exchange"},
+      {"day":"Sunday","time":"All Day","event":"Camp Alchemy Ongoing","host":"Camp Alchemy","artist":"—","category":"Activity / Interactive","details":"Cuddle puddle, kandi making, take-one leave-one"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"9B49 B2B Rudashi","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Afterthought B2B Redline District","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Avrge Joe","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Charma","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Corporate Thugz","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Dime Piece B2B Ecamp","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"DJ Winner","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Earlybored","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Guats","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Gucciflips","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"IIIFirst","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Jonas Loeb","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Kamsterdam","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Liquid L","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Lonnie Mory","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Noah Infinite","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Player 1","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Ptchwrk","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"PTO","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Rafeeki","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Siroch","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Sketchy Pete","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Sumwon","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Sweat Technique","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Thebusiness.","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Viktor Sen","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Afterfunktion","host":"Aftershock Fam X Soundz Organic","artist":"Zejibo","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Alynment","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Arty Da Alien","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Bellatrxx","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Biologix","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Crosbomb","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"DAMQ","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Dangerick","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Dice Man","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"DJ Culprit","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"DJ Tweak","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"DJBombay","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"DJAB","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Dougie Fre$h","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Dustee HD","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Ev.lixir","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Fresh Bvked","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Graedient","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Gryph","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"MF Oblivion","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"MihokDubs","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Mikey-D","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Mosh Samurai","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Oddly","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"ODZ","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Panduh","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Papa Burgundy","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Pen Houston","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Prozey","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"QNZKID","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Sensei Ray Ray","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"The Festival Finesser","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Willdabeast","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"WOOLDOOR","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"YURKO","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"420 Rave Lineup","host":"420 R.AVE","artist":"Zero. ID","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Elements Afters","host":"Pitter's Paradise Vibe Village","artist":"HIM","category":"Music / DJ Set","details":"Afterhours set"},
+      {"day":"TBD / Multiple","time":"—","event":"Elements Afters","host":"Pitter's Paradise Vibe Village","artist":"Lone Woof B2B Cakeknife","category":"Music / DJ Set","details":"Afterhours set"},
+      {"day":"TBD / Multiple","time":"—","event":"Elements Afters","host":"Pitter's Paradise Vibe Village","artist":"RYN B3B Just James & Showboats","category":"Music / DJ Set","details":"Afterhours set"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Ammo Amor","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Bauduy","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Bychance","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Evflow","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Jacques","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Kali","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Meetchka","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Rich Wookz","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Sebas","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Single Grind","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Club Intima","host":"Vibe Village Soundcamp","artist":"Tumbl Down","category":"Music / DJ Set","details":"Set time runs 2:00 AM - Sunrise"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"BB. + LK","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Blanco Rabbit","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Dank Street","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Domo","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Electric Honey","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Hon Jao Violin","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Jezze","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Koopmusik","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Papyon","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Raws","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Riva + Bianca","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Roselyn","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Set Sail","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Takes Two","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"Uptown Vybz","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"X Club.","category":"Music / DJ Set","details":"Aug 7-9"},
+      {"day":"TBD / Multiple","time":"—","event":"Solar Escape Activities","host":"Solar Sounds (Subaquatic x Hennessy)","artist":"—","category":"Activity / Interactive","details":"Yoga, Magic, Movies & More Activities"},
+      {"day":"TBD / Multiple","time":"—","event":"Ongoing Activities","host":"The Last Jawn Benders","artist":"—","category":"Activity / Interactive","details":"Flow Jams, Journal Book, Kandi Station"}
+    ];
+
+    let currentData = [...festivalData];
+    let sortDirections = [true, true, true, true, true, true, true];
+
+    // Helper for DJ/Artist preferred display
+    function getEventTitle(row) {
+      return (row.artist && row.artist !== '—') ? row.artist : row.event;
+    }
+
+    // Day Color Helper
+    function getDayClass(day) {
+      switch(day) {
+        case 'Thursday': return 'day-thursday';
+        case 'Friday': return 'day-friday';
+        case 'Saturday': return 'day-saturday';
+        case 'Sunday': return 'day-sunday';
+        default: return 'day-tbd';
+      }
+    }
+
+    // Category Color Helper
+    function getCategoryClass(category) {
+      if (category.includes('Music')) return 'cat-music';
+      if (category.includes('Activity')) return 'cat-activity';
+      if (category.includes('Workshop')) return 'cat-workshop';
+      return '';
+    }
+
+    // Populate Dynamic Host Options
+    function populateHosts() {
+      const hostSelect = document.getElementById('filterHost');
+      const hosts = [...new Set(festivalData.map(item => item.host))].sort();
+      hosts.forEach(host => {
+        const opt = document.createElement('option');
+        opt.value = host;
+        opt.textContent = host;
+        hostSelect.appendChild(opt);
+      });
+    }
+
+    // Render Table / Cards
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      const isMobile = window.innerWidth <= 768;
+
+      data.forEach((row, index) => {
+        const tr = document.createElement('tr');
+        tr.dataset.index = index;
+
+        const displayTitle = getEventTitle(row);
+
+        if (isMobile) {
+          // Mobile Card Layout
+          tr.innerHTML = `
+            <td class="card-top">
+              <span class="card-top-left"><span class="badge-day ${getDayClass(row.day)}">${row.day}</span></span>
+              <span class="card-time-center">${row.time}</span>
+              <span class="card-top-right"><span class="badge-category ${getCategoryClass(row.category)}">${row.category}</span></span>
+            </td>
+            <td class="card-center">
+              <div class="card-host">${row.host}</div>
+              <div class="card-title">${displayTitle}</div>
+            </td>
+            ${row.details ? `<td class="card-details">${row.details}</td>` : ''}
+          `;
+        } else {
+          // Desktop Table Layout
+          tr.innerHTML = `
+            <td><span class="${getDayClass(row.day)}">${row.day}</span></td>
+            <td class="time-slot">${row.time}</td>
+            <td>${row.host}</td>
+            <td>${row.event}</td>
+            <td class="artist-name">${row.artist}</td>
+            <td><span class="badge-category ${getCategoryClass(row.category)}">${row.category}</span></td>
+            <td style="color: var(--text-muted);">${row.details}</td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('rowCount').textContent = `${data.length} Quests Await`;
+      document.getElementById('showingCount').textContent = `Showing ${data.length} of ${festivalData.length} entries`;
+    }
+
+    // Global Filter Function
+    function applyFilters() {
+      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      const dayVal = document.getElementById('filterDay').value;
+      const catVal = document.getElementById('filterCategory').value;
+      const hostVal = document.getElementById('filterHost').value;
+
+      currentData = festivalData.filter(item => {
+        const matchesSearch = Object.values(item).some(val => val.toLowerCase().includes(searchVal));
+        const matchesDay = dayVal === '' || item.day === dayVal;
+        const matchesCat = catVal === '' || item.category === catVal;
+        const matchesHost = hostVal === '' || item.host === hostVal;
+
+        return matchesSearch && matchesDay && matchesCat && matchesHost;
+      });
+
+      renderTable(currentData);
+    }
+
+    // Column Sorting
+    function sortTable(colIndex) {
+      const keys = ['day', 'time', 'host', 'event', 'artist', 'category', 'details'];
+      const key = keys[colIndex];
+      const asciiDirection = sortDirections[colIndex];
+
+      currentData.sort((a, b) => {
+        let valA = a[key].toUpperCase();
+        let valB = b[key].toUpperCase();
+
+        if (valA < valB) return asciiDirection ? -1 : 1;
+        if (valA > valB) return asciiDirection ? 1 : -1;
+        return 0;
+      });
+
+      sortDirections[colIndex] = !asciiDirection;
+      renderTable(currentData);
+    }
+
+    // Event Listeners
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('filterDay').addEventListener('change', applyFilters);
+    document.getElementById('filterCategory').addEventListener('change', applyFilters);
+    document.getElementById('filterHost').addEventListener('change', applyFilters);
+
+    window.addEventListener('resize', () => renderTable(currentData));
+
+    // Initial Load & Sync
+    populateHosts();
+    applyFilters();
+  </script>
+</body>
+</html>
